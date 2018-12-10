@@ -2059,10 +2059,10 @@ RANGES = {
 
 
 class Preprocessor(object):
-    ur"""
-    >>> Preprocessor(split_ideographs=True, chinese_simplify=True).process_text(u'hello 繁簡轉換器'.encode('utf8'))
-    'hello \xe7\xb9\x81 \xe7\xae\x80 \xe8\xbd\xac \xe6\x8d\xa2 \xe5\x99\xa8'
-    """
+#     ur"""
+#     >>> Preprocessor(split_ideographs=True, chinese_simplify=True).process_text(u'hello 繁簡轉換器'.encode('utf8'))
+#     'hello \xe7\xb9\x81 \xe7\xae\x80 \xe8\xbd\xac \xe6\x8d\xa2 \xe5\x99\xa8'
+#     """
 
     ALL_OPTIONS_BINARY = '''
         htmlunescape
