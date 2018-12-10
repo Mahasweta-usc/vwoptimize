@@ -15,7 +15,7 @@ import time
 import json
 import pprint
 import unicodedata
-from itertools import izip, izip_longest
+from itertools import zip_longest
 from collections import deque
 from pipes import quote
 import numpy as np
