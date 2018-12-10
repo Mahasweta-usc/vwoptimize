@@ -276,8 +276,7 @@ def system(cmd, importance=1, repeat_on_error=0):
     popen = Popen(cmd, shell=True, importance=importance)
 
     if popen.stdout is not None or popen.stderr is not None:
-        out, err = popen.communicate()
-        out = out.decode('utf-8').splitlines()
+        out, err = popen.communicate().decode('utf-8').splitlines()
     else:
         out, err = '', ''
 
@@ -291,7 +290,7 @@ def system(cmd, importance=1, repeat_on_error=0):
             return system(cmd, importance=importance, repeat_on_error=repeat_on_error - 1)
         sys.exit(1)
 
-    return (out) 
+    return (out or ' ') + (err or ' ')
 
 
 def split_file(source, nfolds=None, ignoreheader=False, importance=0, minfoldsize=10000):
