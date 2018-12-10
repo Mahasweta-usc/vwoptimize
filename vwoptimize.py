@@ -291,7 +291,7 @@ def system(cmd, importance=1, repeat_on_error=0):
             return system(cmd, importance=importance, repeat_on_error=repeat_on_error - 1)
         sys.exit(1)
 
-    return (out) + (err)
+    return (out) 
 
 
 def split_file(source, nfolds=None, ignoreheader=False, importance=0, minfoldsize=10000):
