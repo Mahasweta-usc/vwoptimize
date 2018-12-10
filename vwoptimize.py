@@ -3213,7 +3213,7 @@ def parseaudit(source, includezeros=False, oaa=None, top=None, bottom=None):
     total_count = 0
     for klass in sorted(weights_per_class.keys()):
         if oaa is not None:
-            print "\nclass: %s" % klass
+            print("\nclass: %s" % klass)
         weights = weights_per_class[klass]
         weights = [(w, hash) for (hash, w) in weights.iteritems()]
         weights.sort(reverse=True)
