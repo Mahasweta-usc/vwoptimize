@@ -90,7 +90,7 @@ def kill(*jobs, **kwargs):
                 if verbose:
                     log('Killing %s', job.pid)
                 job.kill()
-        except Exception, ex:
+        except Exception as ex:
             if 'no such process' not in str(ex):
                 sys.stderr.write('Failed to kill %r: %s\n' % (job, ex))
 
