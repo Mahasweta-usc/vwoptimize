@@ -15,7 +15,7 @@ import time
 import json
 import pprint
 import unicodedata
-from itertools import zip_longest
+from itertools import izip, izip_longest
 from collections import deque
 from pipes import quote
 import numpy as np
@@ -90,7 +90,7 @@ def kill(*jobs, **kwargs):
                 if verbose:
                     log('Killing %s', job.pid)
                 job.kill()
-        except Exception as ex:
+        except Exception, ex:
             if 'no such process' not in str(ex):
                 sys.stderr.write('Failed to kill %r: %s\n' % (job, ex))
 
@@ -252,7 +252,7 @@ class PassThroughOptionParser(optparse.OptionParser):
         while rargs:
             try:
                 optparse.OptionParser._process_args(self, largs, rargs, values)
-            except (optparse.BadOptionError, optparse.AmbiguousOptionError) as e:
+            except (optparse.BadOptionError, optparse.AmbiguousOptionError), e:
                 largs.append(e.opt_str)
 
     def _match_long_opt(self, opt):
@@ -375,7 +375,7 @@ def die_if_parent_dies(signum=9):
             return True
         else:
             log('prctl failed: %s', os.strerror(ctypes.get_errno()))
-    except StandardError as ex:
+    except StandardError, ex:
         sys.stderr.write(str(ex) + '\n')
 
 
@@ -706,7 +706,7 @@ def vw_cross_validation(
                 vw_failed('missing %r' % (name, ))
 
         predictions = []
-        for items in zip_longest(*[open(x) for x in p_filenames]):
+        for items in izip_longest(*[open(x) for x in p_filenames]):
             predictions.extend([float(x.split()[0]) for x in items if x is not None])
 
         if predictions:
@@ -716,7 +716,7 @@ def vw_cross_validation(
                 predictions = np.array(predictions)
 
         raw_predictions = []
-        for items in zip_longest(*[open(x) for x in r_filenames]):
+        for items in izip_longest(*[open(x) for x in r_filenames]):
             raw_predictions.extend([x for x in items if x is not None])
 
         num_features = [get_num_features(name) for name in readable_models]
@@ -1394,7 +1394,7 @@ def run_single_iteration(vw_filename,
                 capture_output=set([_get_stage(m) for m in vw_metrics]))
     except KeyboardInterrupt:
         raise
-    except BaseException as ex:
+    except BaseException, ex:
         if type(ex) is not SystemExit:
             traceback.print_exc()
         log('Result %s %s : error: %s', VW_CMD, args, ex, importance=2)
@@ -1572,7 +1572,7 @@ def vw_optimize(vw_filename, vw_validation_filename, vw_test_filename, y_true, k
 
             try:
                 optresult = scipy.optimize.minimize(run, t_params, method='Nelder-Mead', options=options)
-            except InterruptOptimization as ex:
+            except InterruptOptimization, ex:
                 log(str(ex), importance=1)
             else:
                 need_separator = True
@@ -1580,7 +1580,7 @@ def vw_optimize(vw_filename, vw_validation_filename, vw_test_filename, y_true, k
         else:
             try:
                 run([])
-            except InterruptOptimization as ex:
+            except InterruptOptimization, ex:
                 log(str(ex), importance=1)
 
         if need_separator:
@@ -1937,7 +1937,7 @@ def get_language(doc):
         doc = doc.encode('utf-8')
     try:
         return pycld2.detect(doc, bestEffort=True)[2][0][0].lower()
-    except Exception as ex:
+    except Exception, ex:
         sys.stderr.write('Cannot detect language of %r\n%s\n' % (doc, ex))
 
 
@@ -1971,7 +1971,7 @@ def stem_words(words):
                     if base_stemmer:
                         language = base_language
                         word = base_stemmer.stem(word)
-            except Exception as ex:
+            except Exception, ex:
                 sys.stderr.write('Cannot stem %r %r: %s\n' % (language, word, ex))
         result.append(word)
     return result
@@ -2000,7 +2000,7 @@ def chinese_simplify(unistr, cache={}):
     table = cache.get('table')
     if table is None:
         from hanziconv.charmap import traditional_charmap, simplified_charmap
-        table = dict((ord(char1), char2) for char1, char2 in zip(reversed(traditional_charmap), reversed(simplified_charmap)))
+        table = dict((ord(char1), char2) for char1, char2 in izip(reversed(traditional_charmap), reversed(simplified_charmap)))
         cache['table'] = table
     return unistr.translate(table)
 
@@ -2027,7 +2027,7 @@ def _generate_regex(name, range):
             else:
                 count = item[1] - item[0] + 1
                 result.append(unichr(item[0]) + '-' + unichr(item[1]))
-        except ValueError as ex:
+        except ValueError, ex:
             if 'unichr() arg not in range' in str(ex):
                 ignored += count
             else:
@@ -2059,10 +2059,10 @@ RANGES = {
 
 
 class Preprocessor(object):
-#     ur"""
-#     >>> Preprocessor(split_ideographs=True, chinese_simplify=True).process_text(u'hello 繁簡轉換器'.encode('utf8'))
-#     'hello \xe7\xb9\x81 \xe7\xae\x80 \xe8\xbd\xac \xe6\x8d\xa2 \xe5\x99\xa8'
-#     """
+    ur"""
+    >>> Preprocessor(split_ideographs=True, chinese_simplify=True).process_text(u'hello 繁簡轉換器'.encode('utf8'))
+    'hello \xe7\xb9\x81 \xe7\xae\x80 \xe8\xbd\xac \xe6\x8d\xa2 \xe5\x99\xa8'
+    """
 
     ALL_OPTIONS_BINARY = '''
         htmlunescape
@@ -2219,19 +2219,19 @@ class Preprocessor(object):
             else:
                 text = u' '.join(words)
                 if self.split_combined:
-                    text = self.split_combined.sub(r" \g<0> ", text)
+                    text = self.split_combined.sub(ur" \g<0> ", text)
                 else:
                     if self.split_ideographs:
-                        text = self.split_ideographs.sub(r" \g<0> ", text)
+                        text = self.split_ideographs.sub(ur" \g<0> ", text)
 
                     if self.split_hiragana:
-                        text = self.split_hiragana.sub(r" \g<0> ", text)
+                        text = self.split_hiragana.sub(ur" \g<0> ", text)
 
                     if self.split_katakana:
-                        text = self.split_katakana.sub(r" \g<0> ", text)
+                        text = self.split_katakana.sub(ur" \g<0> ", text)
 
                     if self.split_hangul:
-                        text = self.split_hangul.sub(r" \g<0> ", text)
+                        text = self.split_hangul.sub(ur" \g<0> ", text)
 
                     text = re.sub(r'\s+', ' ', text.strip())
 
@@ -2369,7 +2369,7 @@ def parse_weight(config, named_labels=None):
 
     try:
         config = parse_mapping(config)
-    except ParseError as item:
+    except ParseError, item:
         sys.exit('Weight must be specified as CLASS:WEIGHT, cannot parse %s' % item)
 
     if not config:
@@ -2751,7 +2751,7 @@ def calculate_or_extract_score(metric, y_true, y_pred, config, outputs, sample_w
         if metric.startswith('vw'):
             return extract_score(metric, outputs)
         return calculate_score(metric, y_true, y_pred, config, sample_weight)
-    except Exception as ex:
+    except Exception, ex:
         if MINIMUM_LOG_IMPORTANCE <= 0:
             traceback.print_stack()
             traceback.print_exc()
@@ -2805,7 +2805,7 @@ def recall_at_precision(*args, **kwargs):
     required_precision = _parse_number_or_fraction(metric_param)
     precision, recall, thresholds = precision_recall_curve(*args, **kwargs)
 
-    for pr, r in zip(precision, recall):
+    for pr, r in izip(precision, recall):
         if pr >= required_precision:
             return r
 
@@ -2960,7 +2960,7 @@ def _log_classification_report(prefix, *args, **kwargs):
 def log_classification_report(*args, **kwargs):
     try:
         _log_classification_report(*args, **kwargs)
-    except Exception as ex:
+    except Exception, ex:
         sys.stderr.write(str(ex) + '\n')
 
 
@@ -3213,7 +3213,7 @@ def parseaudit(source, includezeros=False, oaa=None, top=None, bottom=None):
     total_count = 0
     for klass in sorted(weights_per_class.keys()):
         if oaa is not None:
-            print("\nclass: %s" % klass)
+            print "\nclass: %s" % klass
         weights = weights_per_class[klass]
         weights = [(w, hash) for (hash, w) in weights.iteritems()]
         weights.sort(reverse=True)
@@ -3227,12 +3227,12 @@ def parseaudit(source, includezeros=False, oaa=None, top=None, bottom=None):
             if top or bottom:
                 if index >= top and index < len(weights) - bottom:
                     if index == top:
-                        print('...')
+                        print '...'
                     continue
 
             if printing and item:
                 try:
-                    print(item)
+                    print item
                 except IOError:
                     # likely because we're being piped into head or tail
                     printing = False
@@ -3461,7 +3461,7 @@ def log_report(prefix, metrics, breakdown_re, breakdown_top, breakdown_min, y_tr
         breakdown_counts[group] = 1 + breakdown_counts.get(group, 0)
 
     breakdown_counts = breakdown_counts.items()
-    breakdown_counts.sort(key= lambda key, count: (-count, key == 'nomatch', key))
+    breakdown_counts.sort(key=lambda (key, count): (-count, key == 'nomatch', key))
 
     total_count = len(y_pred_text)
 
@@ -3659,7 +3659,7 @@ def main(to_cleanup):
             break
         try:
             os.mkdir(path)
-        except Exception as ex:
+        except Exception, ex:
             sys.stderr.write('Failed to create %r: %s\n' % (path, ex))
         else:
             tmp_prefix = path
