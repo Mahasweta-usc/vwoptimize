@@ -3227,12 +3227,12 @@ def parseaudit(source, includezeros=False, oaa=None, top=None, bottom=None):
             if top or bottom:
                 if index >= top and index < len(weights) - bottom:
                     if index == top:
-                        print '...'
+                        print('...')
                     continue
 
             if printing and item:
                 try:
-                    print item
+                    print(item)
                 except IOError:
                     # likely because we're being piped into head or tail
                     printing = False
