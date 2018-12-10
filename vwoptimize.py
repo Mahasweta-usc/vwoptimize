@@ -1394,7 +1394,7 @@ def run_single_iteration(vw_filename,
                 capture_output=set([_get_stage(m) for m in vw_metrics]))
     except KeyboardInterrupt:
         raise
-    except BaseException, ex:
+    except BaseException as ex:
         if type(ex) is not SystemExit:
             traceback.print_exc()
         log('Result %s %s : error: %s', VW_CMD, args, ex, importance=2)
@@ -1937,7 +1937,7 @@ def get_language(doc):
         doc = doc.encode('utf-8')
     try:
         return pycld2.detect(doc, bestEffort=True)[2][0][0].lower()
-    except Exception, ex:
+    except Exception as ex:
         sys.stderr.write('Cannot detect language of %r\n%s\n' % (doc, ex))
 
 
@@ -1971,7 +1971,7 @@ def stem_words(words):
                     if base_stemmer:
                         language = base_language
                         word = base_stemmer.stem(word)
-            except Exception, ex:
+            except Exception as ex:
                 sys.stderr.write('Cannot stem %r %r: %s\n' % (language, word, ex))
         result.append(word)
     return result
@@ -2751,7 +2751,7 @@ def calculate_or_extract_score(metric, y_true, y_pred, config, outputs, sample_w
         if metric.startswith('vw'):
             return extract_score(metric, outputs)
         return calculate_score(metric, y_true, y_pred, config, sample_weight)
-    except Exception, ex:
+    except Exception as ex:
         if MINIMUM_LOG_IMPORTANCE <= 0:
             traceback.print_stack()
             traceback.print_exc()
@@ -2960,7 +2960,7 @@ def _log_classification_report(prefix, *args, **kwargs):
 def log_classification_report(*args, **kwargs):
     try:
         _log_classification_report(*args, **kwargs)
-    except Exception, ex:
+    except Exception as ex:
         sys.stderr.write(str(ex) + '\n')
 
 
@@ -3659,7 +3659,7 @@ def main(to_cleanup):
             break
         try:
             os.mkdir(path)
-        except Exception, ex:
+        except Exception as ex:
             sys.stderr.write('Failed to create %r: %s\n' % (path, ex))
         else:
             tmp_prefix = path
