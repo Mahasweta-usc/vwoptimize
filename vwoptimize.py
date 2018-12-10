@@ -706,7 +706,7 @@ def vw_cross_validation(
                 vw_failed('missing %r' % (name, ))
 
         predictions = []
-        for items in izip_longest(*[open(x) for x in p_filenames]):
+        for items in zip_longest(*[open(x) for x in p_filenames]):
             predictions.extend([float(x.split()[0]) for x in items if x is not None])
 
         if predictions:
@@ -716,7 +716,7 @@ def vw_cross_validation(
                 predictions = np.array(predictions)
 
         raw_predictions = []
-        for items in izip_longest(*[open(x) for x in r_filenames]):
+        for items in zip_longest(*[open(x) for x in r_filenames]):
             raw_predictions.extend([x for x in items if x is not None])
 
         num_features = [get_num_features(name) for name in readable_models]
@@ -2000,7 +2000,7 @@ def chinese_simplify(unistr, cache={}):
     table = cache.get('table')
     if table is None:
         from hanziconv.charmap import traditional_charmap, simplified_charmap
-        table = dict((ord(char1), char2) for char1, char2 in izip(reversed(traditional_charmap), reversed(simplified_charmap)))
+        table = dict((ord(char1), char2) for char1, char2 in zip(reversed(traditional_charmap), reversed(simplified_charmap)))
         cache['table'] = table
     return unistr.translate(table)
 
@@ -2805,7 +2805,7 @@ def recall_at_precision(*args, **kwargs):
     required_precision = _parse_number_or_fraction(metric_param)
     precision, recall, thresholds = precision_recall_curve(*args, **kwargs)
 
-    for pr, r in izip(precision, recall):
+    for pr, r in zip(precision, recall):
         if pr >= required_precision:
             return r
 
