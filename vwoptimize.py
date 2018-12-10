@@ -252,7 +252,7 @@ class PassThroughOptionParser(optparse.OptionParser):
         while rargs:
             try:
                 optparse.OptionParser._process_args(self, largs, rargs, values)
-            except (optparse.BadOptionError, optparse.AmbiguousOptionError), e:
+            except (optparse.BadOptionError, optparse.AmbiguousOptionError) as e:
                 largs.append(e.opt_str)
 
     def _match_long_opt(self, opt):
@@ -375,7 +375,7 @@ def die_if_parent_dies(signum=9):
             return True
         else:
             log('prctl failed: %s', os.strerror(ctypes.get_errno()))
-    except StandardError, ex:
+    except StandardError as ex:
         sys.stderr.write(str(ex) + '\n')
 
 
@@ -1572,7 +1572,7 @@ def vw_optimize(vw_filename, vw_validation_filename, vw_test_filename, y_true, k
 
             try:
                 optresult = scipy.optimize.minimize(run, t_params, method='Nelder-Mead', options=options)
-            except InterruptOptimization, ex:
+            except InterruptOptimization as ex:
                 log(str(ex), importance=1)
             else:
                 need_separator = True
@@ -1580,7 +1580,7 @@ def vw_optimize(vw_filename, vw_validation_filename, vw_test_filename, y_true, k
         else:
             try:
                 run([])
-            except InterruptOptimization, ex:
+            except InterruptOptimization as ex:
                 log(str(ex), importance=1)
 
         if need_separator:
@@ -2027,7 +2027,7 @@ def _generate_regex(name, range):
             else:
                 count = item[1] - item[0] + 1
                 result.append(unichr(item[0]) + '-' + unichr(item[1]))
-        except ValueError, ex:
+        except ValueError as ex:
             if 'unichr() arg not in range' in str(ex):
                 ignored += count
             else:
@@ -2369,7 +2369,7 @@ def parse_weight(config, named_labels=None):
 
     try:
         config = parse_mapping(config)
-    except ParseError, item:
+    except ParseError as item:
         sys.exit('Weight must be specified as CLASS:WEIGHT, cannot parse %s' % item)
 
     if not config:
