@@ -2219,19 +2219,19 @@ class Preprocessor(object):
             else:
                 text = u' '.join(words)
                 if self.split_combined:
-                    text = self.split_combined.sub(ur" \g<0> ", text)
+                    text = self.split_combined.sub(r" \g<0> ", text)
                 else:
                     if self.split_ideographs:
-                        text = self.split_ideographs.sub(ur" \g<0> ", text)
+                        text = self.split_ideographs.sub(r" \g<0> ", text)
 
                     if self.split_hiragana:
-                        text = self.split_hiragana.sub(ur" \g<0> ", text)
+                        text = self.split_hiragana.sub(r" \g<0> ", text)
 
                     if self.split_katakana:
-                        text = self.split_katakana.sub(ur" \g<0> ", text)
+                        text = self.split_katakana.sub(r" \g<0> ", text)
 
                     if self.split_hangul:
-                        text = self.split_hangul.sub(ur" \g<0> ", text)
+                        text = self.split_hangul.sub(r" \g<0> ", text)
 
                     text = re.sub(r'\s+', ' ', text.strip())
 
