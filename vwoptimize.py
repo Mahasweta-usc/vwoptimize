@@ -455,6 +455,7 @@ def run_subprocesses(cmds, workers=None, importance=None):
 
                 if popen.stdout is not None or popen.stderr is not None:
                     out, err = popen.communicate().decode('utf-8')
+                    print(out)
                     out = (out or '') + (err or '')
                     outputs.setdefault(popen._name, []).append(out)
 
