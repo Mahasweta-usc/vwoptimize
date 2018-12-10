@@ -276,7 +276,8 @@ def system(cmd, importance=1, repeat_on_error=0):
     popen = Popen(cmd, shell=True, importance=importance)
 
     if popen.stdout is not None or popen.stderr is not None:
-        out, err = popen.communicate().decode('utf-8')
+        out, err = popen.communicate()
+#         .decode('utf-8')
     else:
         out, err = '', ''
 
