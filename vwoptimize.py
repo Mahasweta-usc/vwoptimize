@@ -3461,7 +3461,7 @@ def log_report(prefix, metrics, breakdown_re, breakdown_top, breakdown_min, y_tr
         breakdown_counts[group] = 1 + breakdown_counts.get(group, 0)
 
     breakdown_counts = breakdown_counts.items()
-    breakdown_counts.sort(key=lambda (key, count): (-count, key == 'nomatch', key))
+    breakdown_counts.sort(key= lambda key, count: (-count, key == 'nomatch', key))
 
     total_count = len(y_pred_text)
 
